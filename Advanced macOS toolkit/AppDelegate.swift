@@ -9,7 +9,6 @@ import Cocoa
 import ServiceManagement
 import SwiftUI
 
-@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     var window: NSWindow!
@@ -58,13 +57,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func clicked(_ sender: Any) {
-        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 300, height: 480), styleMask: [.fullScreen, .titled, .closable, .miniaturizable, .resizable, .fullSizeContentView], backing: .buffered, defer: false)
-    
+        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 300, height: 480), styleMask: [.fullScreen, .titled, .closable, .miniaturizable, .resizable, .fullScreen], backing: .buffered, defer: false)
+        NSApplication.shared.setActivationPolicy(.regular)
         window.title = "Toolkit settings"
         window.makeKeyAndOrderFront(nil)
         let hostingView = NSHostingView(rootView: SettingsView())
-        //hostingView.frame = window.contentView?.bounds
+        hostingView.translatesAutoresizingMaskIntoConstraints = false
         window.contentView?.addSubview(hostingView)
+
+        NSLayoutConstraint.activate([
+            hostingView.leadingAnchor.constraint(equalTo: window.contentView!.leadingAnchor),
+            hostingView.trailingAnchor.constraint(equalTo: window.contentView!.trailingAnchor),
+            hostingView.topAnchor.constraint(equalTo: window.contentView!.topAnchor),
+            hostingView.bottomAnchor.constraint(equalTo: window.contentView!.bottomAnchor),
+        ])
     }
 
 }

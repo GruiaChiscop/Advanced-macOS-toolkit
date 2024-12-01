@@ -17,6 +17,32 @@ class Settings {
     static var useNotifications = false
     static var useVO = false
     static var intervals = [Double()]
+    static func getAllVoices() -> [String: [String]] {
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        let locale = Locale.current
+        //determine the supported languages
+        
+        var dict: [String: [String]] = [:]
+        for voice in voices {
+            if let localizedLanguage = Locale.current.localizedString(forLanguageCode: voice.language) {
+                if dict[localizedLanguage] == nil {
+                    dict[localizedLanguage] = [String]()
+                }
+                dict[localizedLanguage]?.append(voice.name)
+            }
+        }
+        return dict
+    }
+    
+    static func getVoice() -> (voiceName: String, language: String)? {
+        if let voice = Self.voice {
+            let language = Locale.current.localizedString(forLanguageCode: voice.language)
+            if let lang = language {
+                return (voiceName: voice.name, language: lang)
+            }
+        }
+        return nil
+    }
     
     static func speak(_ text: String) {
         let utterance = AVSpeechUtterance(string: text)
